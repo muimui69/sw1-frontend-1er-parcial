@@ -1,9 +1,16 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
+import { loadConfig } from "./config/env";
+
+const config = loadConfig(process.env);
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxt/image'],
+  modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxt/image', '@pinia/nuxt'],
+  plugins: [
+    '~/plugins/vue-apollo',
+  ],
   shadcn: {
     /**
      * Prefix for all the imported component
@@ -14,5 +21,12 @@ export default defineNuxtConfig({
      * @default "./components/ui"
      */
     componentDir: './components/ui'
-  }
+  },
+  runtimeConfig: {
+    public: {
+      appName: config.appName,
+      apiDev: config.apiDev,
+    }
+  },
+
 })

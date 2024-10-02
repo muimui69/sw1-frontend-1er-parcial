@@ -1,0 +1,52 @@
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  role: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Invitation {
+  email: String!
+  status: String!
+}
+
+type Room {
+  id: ID!
+  host: User!
+  title: String!
+  participants: [Participant!]!
+  invitations: [Invitation!]!
+  isOpen: Boolean!
+  description: String
+  code: String
+  xml: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Participant {
+  user: User!
+  role: String!
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type Query {
+  viewer: User
+  users: [User!]!
+  rooms: [Room!]!
+  room(id: ID!): Room
+}
+
+type Mutation {
+  login(email: String!, password: String!): AuthPayload!
+  register(username: String!, email: String!, password: String!): AuthPayload!
+  createRoom(title: String!, description: String, isOpen: Boolean): Room!
+  inviteToRoom(roomId: ID!, email: String!): Room!
+  acceptInvitation(roomId: ID!): Room!
+}

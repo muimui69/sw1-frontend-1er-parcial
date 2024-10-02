@@ -1,5 +1,5 @@
-<script setup>
-import { Activity, Menu, User } from 'lucide-vue-next'
+<script setup="ts">
+import { Pyramid, Menu, User } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import {
     DropdownMenu,
@@ -8,12 +8,15 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { mainNavConfig } from '@/config/marketing';
+// import { mainNavConfig } from '@/config/marketing';
 
 const isSignedIn = ref(false)
-const isMobileMenuOpen = ref(false)
+// const isMobileMenuOpen = ref(false)
+const config = useRuntimeConfig(); // Acceder a las variables de configuración
+const appName = config.public.appName; // Obtener el nombre de la aplicación
 
 </script>
+
 
 <template>
     <header
@@ -21,15 +24,15 @@ const isMobileMenuOpen = ref(false)
         <div class="container flex h-14 items-center">
             <div class="mr-4 flex">
                 <nuxt-link to="/" class="mr-6 flex items-center space-x-2">
-                    <Activity class="h-6 w-6" />
-                    <span class="hidden font-bold sm:inline-block">Diagramator</span>
+                    <Pyramid class="h-6 w-6" />
+                    <span class="hidden font-bold sm:inline-block">{{ appName }}</span>
                 </nuxt-link>
-                <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                <!-- <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
                     <nuxt-link v-for="item in mainNavConfig.mainNav" :key="item.href" :to="item.href"
                         class="transition-colors hover:text-foreground/80 text-foreground/60">
                         {{ item.title }}
                     </nuxt-link>
-                </nav>
+                </nav> -->
             </div>
             <div class="flex flex-1 items-center justify-end space-x-2">
                 <nav class="flex items-center">
@@ -50,7 +53,10 @@ const isMobileMenuOpen = ref(false)
                             <DropdownMenuItem @click="handleSignInOut">Sign out</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button v-else @click="handleSignInOut" variant="ghost" class="hidden md:inline-flex">Login</Button>
+                    <Button variant="ghost" class="hidden md:inline-flex">
+                        <NuxtLink to="/auth/sign-in">Iniciar sesión</NuxtLink>
+                    </Button>
+
                 </nav>
             </div>
             <Sheet>
@@ -63,9 +69,9 @@ const isMobileMenuOpen = ref(false)
                 </SheetTrigger>
                 <SheetContent side="left" class="w-[300px] sm:w-[400px]">
                     <nav class="flex flex-col space-y-4 mt-4">
-                        <NavItems />
+                        <!-- <NavItems /> -->
                         <Button v-if="!isSignedIn" @click="handleSignInOut" variant="ghost"
-                            class="justify-start">Login</Button>
+                            class="justify-start">Iniciar sesion</Button>
                     </nav>
                 </SheetContent>
             </Sheet>
