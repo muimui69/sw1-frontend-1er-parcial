@@ -1,0 +1,4 @@
+<template>
+    <MainNav />
+    <HeroSection />
+</template>
