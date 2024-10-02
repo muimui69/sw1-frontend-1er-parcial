@@ -8,9 +8,17 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-// import { mainNavConfig } from '@/config/marketing';
+import { useUserStore } from '@/stores/user';
 
-const isSignedIn = ref(false)
+const userStore = useUserStore();
+const handleSignInOut = () => {
+    if (userStore.isSignedIn) {
+        userStore.logout();
+    } else {
+        // Redirigir a la página de inicio de sesión
+    }
+};
+
 // const isMobileMenuOpen = ref(false)
 const config = useRuntimeConfig(); // Acceder a las variables de configuración
 const appName = config.public.appName; // Obtener el nombre de la aplicación
@@ -53,8 +61,9 @@ const appName = config.public.appName; // Obtener el nombre de la aplicación
                             <DropdownMenuItem @click="handleSignInOut">Sign out</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button variant="ghost" class="hidden md:inline-flex">
-                        <NuxtLink to="/auth/sign-in">Iniciar sesión</NuxtLink>
+                    <Button variant="ghost" class="hidden md:inline-flex" @click="handleSignInOut">
+                        <NuxtLink to="/auth/sign-in"> {{ userStore.isSignedIn ? 'Cerrar sesión' : 'Iniciar sesión' }}
+                        </NuxtLink>
                     </Button>
 
                 </nav>

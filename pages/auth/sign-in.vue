@@ -22,12 +22,9 @@ const handleLogin = async () => {
 
     onDone(({ data }) => {
         const { token, user } = data.login;
-
         userStore.setUser(token, user);
-
         localStorage.setItem('authToken', token);
-
-        router.push('/');
+        router.push('/diagrammer');
     });
 
     onError((error) => {

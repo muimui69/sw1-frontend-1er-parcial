@@ -10,6 +10,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxt/image', '@pinia/nuxt'],
   plugins: [
     '~/plugins/vue-apollo',
+    '~/plugins/pinia-store',
   ],
   shadcn: {
     /**

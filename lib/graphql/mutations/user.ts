@@ -20,8 +20,8 @@ export const LOGIN_MUTATION = gql`
 
 
 export const REGISTER_MUTATION = gql`
-  mutation Register($input: RegisterInput!) {
-    register(input: $input) {
+  mutation register($createUserInput: CreateUserInput!) {
+    register(createUserInput: $createUserInput) {
       token
       user {
         id
