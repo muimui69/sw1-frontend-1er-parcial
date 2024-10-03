@@ -29,8 +29,8 @@ export default defineNuxtConfig({
       apiDev: config.apiDev,
     }
   },
-  build: {
-    transpile: ['@joint/plus']
-  }
+  // build: {
+  //   transpile: ['@joint/plus']
+  // }
 
 })
