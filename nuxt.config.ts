@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 import { loadConfig } from "./config/env";
-import { resolve } from 'path'
+import path, { resolve } from 'path'
 
 const config = loadConfig(process.env);
 
@@ -10,8 +10,8 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxt/image', '@pinia/nuxt'],
   plugins: [
-    '~/plugins/vue-apollo',
-    '~/plugins/pinia-store',
+    './plugins/vue-apollo',
+    './plugins/pinia-store',
   ],
   shadcn: {
     /**
@@ -30,7 +30,9 @@ export default defineNuxtConfig({
       apiDev: config.apiDev,
     }
   },
-  // alias: {
-  //   // '/assets': resolve(__dirname, 'public/assets'),
-  // },
+  alias: {
+    '~/': path.resolve(__dirname, './src'),
+    '@components': path.resolve(__dirname, './src/components')
+  }
+
 })
