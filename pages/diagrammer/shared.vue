@@ -4,5 +4,5 @@ definePageMeta({
 })
 </script>
 <template>
-    <p>Rooms</p>
+    <p>Shared</p>
 </template>

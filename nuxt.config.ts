@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 import { loadConfig } from "./config/env";
+import { resolve } from 'path'
 
 const config = loadConfig(process.env);
 
@@ -29,5 +30,7 @@ export default defineNuxtConfig({
       apiDev: config.apiDev,
     }
   },
-
+  // alias: {
+  //   // '/assets': resolve(__dirname, 'public/assets'),
+  // },
 })
