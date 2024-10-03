@@ -4,6 +4,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@/*": [
+        "./*"
+      ],
       "@/lib/*": [
         "./lib/*"
       ],
@@ -20,5 +23,5 @@
         "./stores/*"
       ]
     },
-  }
+  },
 }

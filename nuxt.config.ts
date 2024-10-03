@@ -1,7 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 import { loadConfig } from "./config/env";
-import path, { resolve } from 'path'
 
 const config = loadConfig(process.env);
 
@@ -30,9 +29,5 @@ export default defineNuxtConfig({
       apiDev: config.apiDev,
     }
   },
-  alias: {
-    '~/': path.resolve(__dirname, './src'),
-    '@components': path.resolve(__dirname, './src/components')
-  }
 
 })
