@@ -11,7 +11,10 @@ file, You can obtain one at https://www.jointjs.com/license
  or from the JointJS+ archive as was distributed by client IO. See the LICENSE file.*/
 
 
-import * as joint from '@joint/plus';
+// import * as joint from '@joint/plus';
+import * as joint from '../build/package/joint-plus';
+
+
 
 const cache = new Map();
 export namespace app {

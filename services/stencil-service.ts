@@ -11,7 +11,8 @@ file, You can obtain one at https://www.jointjs.com/license
  or from the JointJS+ archive as was distributed by client IO. See the LICENSE file.*/
 
 
-import { ui, dia } from '@joint/plus';
+// import { ui, dia } from '@joint/plus';
+import { ui, dia } from '../build/package/joint-plus';
 import * as appShapes from '../shapes/app-shapes';
 
 export class StencilService {

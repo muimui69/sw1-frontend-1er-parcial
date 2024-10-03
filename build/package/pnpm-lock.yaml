@@ -1,0 +1,22 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      '@joint/core':
+        specifier: ~4.0.2
+        version: 4.0.4
+
+packages:
+
+  '@joint/core@4.0.4':
+    resolution: {integrity: sha512-3DaOFo1qF1lE89gl2ouVh04WFbgcQpfMBzuK11S7CZpWlc6psKPAsIkE3JbaxiI0BPdtsbolJM1xiMCIUSfDyw==}
+
+snapshots:
+
+  '@joint/core@4.0.4': {}

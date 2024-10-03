@@ -56,7 +56,7 @@ onMounted(() => {
 
 <style lang="scss">
 /* Importar estilos de Rappid */
-@import "@joint/plus/joint-plus.css";
+@import "/build/package/joint-plus.css";
 @import "./css/style.css";
 @import "./css/theme-picker.css";
 @import "./css/style.modern.css";

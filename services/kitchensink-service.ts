@@ -11,7 +11,9 @@ file, You can obtain one at https://www.jointjs.com/license
  or from the JointJS+ archive as was distributed by client IO. See the LICENSE file.*/
 
 
-import * as joint from '@joint/plus';
+// import * as joint from '@joint/plus';
+import * as joint from '../build/package/joint-plus';
+
 import { DirectedGraph } from '@joint/layout-directed-graph';
 import { StencilService } from './stencil-service';
 import { ToolbarService } from './toolbar-service';
@@ -92,7 +94,7 @@ class KitchenSinkService {
             drawGrid: true,
             model: graph,
             cellViewNamespace: appShapes,
-            defaultLink: <joint.dia.Link>new appShapes.app.Link(),
+            defaultLink: new appShapes.app.Link() as unknown as joint.dia.Link,
             defaultConnectionPoint: appShapes.app.Link.connectionPoint,
             interactive: { linkMove: false },
             async: true,
