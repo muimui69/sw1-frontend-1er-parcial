@@ -12,9 +12,7 @@
   "dependencies": {
     "@apollo/client": "^3.11.8",
     "@joint/layout-directed-graph": "4.0.3",
-    "@joint/plus": "file:build\\package\\joint-plus.tgz",
-    "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^8.4.1",
+    "@joint/plus": "file:./build/package/joint-plus.tgz",
     "@nuxt/image": "^1.8.0",
     "@pinia/nuxt": "^0.5.5",
     "@vue/apollo-composable": "^4.2.1",
