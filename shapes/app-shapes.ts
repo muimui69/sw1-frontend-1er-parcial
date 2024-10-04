@@ -55,6 +55,7 @@ export class Table extends shapes.standard.HeaderedRecord {
                     strokeWidth: 1,
                 },
                 headerLabel: {
+                    text: 'Default Name',
                     fill: '#636363',
                     fontWeight: 'bold',
                     fontFamily: 'sans-serif',
@@ -153,6 +154,7 @@ export class Table extends shapes.standard.HeaderedRecord {
     }
 
     protected _setColumnsAndMethods(columns: Array<ColumnData> = [], methods: Array<{ name: string, returnType: string }> = []) {
+        console.log('Actualizando columnas y métodos:', columns, methods);
         const columnNames: Array<object> = [];
         const columnValues: Array<object> = [];
         const methodNames: Array<object> = [];

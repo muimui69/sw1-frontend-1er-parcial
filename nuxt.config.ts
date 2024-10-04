@@ -11,6 +11,7 @@ export default defineNuxtConfig({
   plugins: [
     './plugins/vue-apollo',
     './plugins/pinia-store',
+    // './plugins/socket.client',
   ],
   shadcn: {
     /**
@@ -27,7 +28,7 @@ export default defineNuxtConfig({
     public: {
       appName: config.appName,
       apiDev: config.apiDev,
-      apiProd: config.apiProd
+      apiProd: config.apiProd,
     }
   },
 

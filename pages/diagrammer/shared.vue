@@ -63,6 +63,7 @@ definePageMeta({
                                 <TableHead>Nombre</TableHead>
                                 <TableHead>Estado</TableHead>
                                 <TableHead>Participantes</TableHead>
+                                <TableHead>Anfitrion</TableHead>
                                 <TableHead class="text-right">Acciones</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -78,6 +79,7 @@ definePageMeta({
                                             </li>
                                         </ul>
                                     </TableCell>
+                                    <TableCell>{{ room.host.email }}</TableCell>
                                     <TableCell class="text-right">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>

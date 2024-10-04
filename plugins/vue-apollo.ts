@@ -9,6 +9,7 @@ export default defineNuxtPlugin(() => {
         ? runtimeConfig.public.apiProd
         : runtimeConfig.public.apiDev;
 
+    console.log("??????????????????", apiUri)
     const httpLink = createHttpLink({
         uri: apiUri
     });

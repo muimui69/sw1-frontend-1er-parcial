@@ -100,6 +100,7 @@ export class StencilService {
                             strokeWidth: 1,
                         },
                         headerLabel: {
+                            text: 'Default Name',
                             fill: '#636363',
                             fontWeight: 'bold',
                             fontFamily: 'sans-serif',

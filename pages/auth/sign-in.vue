@@ -13,13 +13,14 @@ const userStore = useUserStore();
 const { mutate: login, onDone, onError } = useMutation(LOGIN_MUTATION);
 
 const handleLogin = async () => {
-    await login({
+    const qqq = await login({
         loginInput: {
             email: email.value,
             password: password.value
         }
     });
 
+    console.log('>>>>>>>>>>', qqq)
     onDone(({ data }) => {
         const { token, user } = data.login;
         userStore.setUser(user, token);
