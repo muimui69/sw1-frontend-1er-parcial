@@ -137,35 +137,34 @@ export class StencilService {
                     }
                 },
                 {
-                    type: 'Herencia',  // Dummy representation for links
+                    type: 'Herencia',  // Representación para Herencia (Generalización)
                     attrs: {
                         body: { fill: 'none', stroke: '#000000', strokeWidth: 2 },
                         label: { text: 'Herencia', fill: '#000000', fontSize: 10 }
                     }
                 },
                 {
-                    type: 'Agregacion',  // Dummy representation for links
+                    type: 'Agregacion',  // Representación para Agregación
                     attrs: {
                         body: { fill: 'none', stroke: '#000000', strokeWidth: 2 },
-                        label: { text: 'Agregacion', fill: '#000000', fontSize: 10 }
+                        label: { text: 'Agregación', fill: '#000000', fontSize: 10 }
                     }
                 },
                 {
-                    type: 'Composicion',  // Dummy representation for links
+                    type: 'Composicion',  // Representación para Composición
                     attrs: {
                         body: { fill: 'none', stroke: '#000000', strokeWidth: 2 },
-                        label: { text: 'Composicion', fill: '#000000', fontSize: 10 }
+                        label: { text: 'Composición', fill: '#000000', fontSize: 10 }
                     }
                 },
                 {
-                    type: 'Dependencia',  // Dummy representation for links
+                    type: 'Dependencia',  // Representación para Dependencia
                     attrs: {
                         body: { fill: 'none', stroke: '#000000', strokeWidth: 2 },
                         label: { text: 'Dependencia', fill: '#000000', fontSize: 10 }
                     }
                 },
             ],
-
         };
     }
 }
