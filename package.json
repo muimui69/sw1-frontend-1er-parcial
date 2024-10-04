@@ -10,12 +10,13 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@joint/plus": "file:./build/package",
     "@apollo/client": "^3.11.8",
     "@joint/layout-directed-graph": "4.0.3",
+    "@joint/plus": "file:./build/package",
     "@nuxt/image": "^1.8.0",
     "@pinia/nuxt": "^0.5.5",
     "@vue/apollo-composable": "^4.2.1",
+    "@vueuse/core": "^11.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "graphql": "^16.9.0",

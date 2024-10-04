@@ -1,6 +1,8 @@
+import gql from 'graphql-tag'
+
 export const CREATE_ROOM_MUTATION = gql`
-  mutation CreateRoom($input: CreateRoomInput!) {
-    createRoom(input: $input) {
+  mutation createRoom($createRoomInput: CreateRoomInput!) {
+    createRoom(createRoomInput: $createRoomInput) {
       id
       title
       host {

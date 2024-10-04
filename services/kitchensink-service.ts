@@ -87,18 +87,53 @@ class KitchenSinkService {
 
         this.commandManager = new joint.dia.CommandManager({ graph: graph });
 
+        // const paper = this.paper = new joint.dia.Paper({
+        //     width: 1000,
+        //     height: 1000,
+        //     gridSize: 10,
+        //     drawGrid: true,
+        //     model: graph,
+        //     cellViewNamespace: appShapes,
+        //     defaultConnector: { name: 'rounded' },
+        //     // defaultLink: new appShapes.app.Link() as unknown as joint.dia.Link,
+        //     defaultLink: <joint.dia.Link>new appShapes.Link(),
+        //     // defaultConnectionPoint: appShapes.app.Link.connectionPoint,
+        //     defaultConnectionPoint: appShapes.Link.connectionPoint,
+        //     interactive: { linkMove: false },
+        //     async: true,
+        //     sorting: joint.dia.Paper.sorting.APPROX
+        // });
+
         const paper = this.paper = new joint.dia.Paper({
+            model: graph,
             width: 1000,
             height: 1000,
-            gridSize: 10,
+            gridSize: 20,
             drawGrid: true,
-            model: graph,
-            cellViewNamespace: appShapes,
-            defaultLink: new appShapes.app.Link() as unknown as joint.dia.Link,
-            defaultConnectionPoint: appShapes.app.Link.connectionPoint,
-            interactive: { linkMove: false },
+            // interactive: { linkMove: false },
+            interactive: true, // añadido
+            defaultConnector: { name: 'rounded' }, // añadido
             async: true,
-            sorting: joint.dia.Paper.sorting.APPROX
+            // frozen: true, // añadido
+            sorting: joint.dia.Paper.sorting.APPROX,
+            cellViewNamespace: appShapes,
+            // routerNamespace : { ...joint.routers }, // añadido
+            // defaultRouter: { name: 'customRouter' }, // añadido
+            // anchorNamespace: { ...joint.anchors }, // añadido
+            // defaultAnchor: { name: 'customAnchor' }, // añadido
+            // snapLinks: true, // añadido
+            // linkPinning: false, // añadido
+            // magnetThreshold: 'onleave', // añadido
+            // highlighting: { //añadido
+            //     'conection': {
+            //         name: 'addClass',
+            //         options: {
+            //             className: 'column-connected'
+            //         }
+            //     }
+            // },    
+            defaultLink: <joint.dia.Link>new appShapes.Link(),
+            defaultConnectionPoint: appShapes.Link.connectionPoint,
         });
 
         paper.on('blank:contextmenu', (evt) => {
@@ -135,6 +170,19 @@ class KitchenSinkService {
 
     }
 
+    // initializeStencil() {
+
+    //     const { stencilService, paperScroller, snaplines } = this;
+    //     stencilService.create(paperScroller, snaplines);
+
+    //     this.renderPlugin('.stencil-container', stencilService.stencil);
+    //     stencilService.setShapes();
+
+    //     stencilService.stencil.on('element:drop', (elementView: joint.dia.ElementView) => {
+    //         this.selection.collection.reset([elementView.model]);
+    //     });
+    // }
+
     initializeStencil() {
 
         const { stencilService, paperScroller, snaplines } = this;
@@ -144,6 +192,63 @@ class KitchenSinkService {
         stencilService.setShapes();
 
         stencilService.stencil.on('element:drop', (elementView: joint.dia.ElementView) => {
+
+            const model = elementView.model;
+            console.log(model);
+            console.log(model.get('type'));
+            switch (model.get('type')) {
+                case 'LinkStencilHerencia':
+                    const linkH = new appShapes.Herencia({
+                        source: { x: model.get('position')?.x ?? 0, y: model.get('position')?.y ?? 0 },
+                        target: { x: (model.get('position')?.x ?? 0) + 250, y: model.get('position')?.y ?? 0 }
+                    });
+
+                    // Añadir el enlace al gráfico
+                    this.graph.addCell(linkH);
+
+                    // Remover el dummy link
+                    model.remove();
+                    break;
+                case 'LinkStencilAgregacion':
+                    const linkA = new appShapes.Agregacion({
+                        source: { x: model.get('position')?.x ?? 0, y: model.get('position')?.y ?? 0 },
+                        target: { x: (model.get('position')?.x ?? 0) + 250, y: model.get('position')?.y ?? 0 }
+                    });
+
+                    // Añadir el enlace al gráfico
+                    this.graph.addCell(linkA);
+
+                    // Remover el dummy link
+                    model.remove();
+                    break;
+                case 'LinkStencilComposicion':
+                    const linkC = new appShapes.Composicion({
+                        source: { x: model.get('position')?.x ?? 0, y: model.get('position')?.y ?? 0 },
+                        target: { x: (model.get('position')?.x ?? 0) + 250, y: model.get('position')?.y ?? 0 }
+                    });
+
+                    // Añadir el enlace al gráfico
+                    this.graph.addCell(linkC);
+
+                    // Remover el dummy link
+                    model.remove();
+                    break;
+                case 'LinkStencilDependencia':
+                    const linkD = new appShapes.Dependencia({
+                        source: { x: model.get('position')?.x ?? 0, y: model.get('position')?.y ?? 0 },
+                        target: { x: (model.get('position')?.x ?? 0) + 250, y: model.get('position')?.y ?? 0 }
+                    });
+
+                    // Añadir el enlace al gráfico
+                    this.graph.addCell(linkD);
+
+                    // Remover el dummy link
+                    model.remove();
+                    break;
+
+                default:
+                    break;
+            }
             this.selection.collection.reset([elementView.model]);
         });
     }
@@ -381,7 +486,7 @@ class KitchenSinkService {
     initializeNavigator() {
 
         const navigator = this.navigator = new joint.ui.Navigator({
-            width: 240,
+            width: 300,
             height: 115,
             paperScroller: this.paperScroller,
             zoom: false,

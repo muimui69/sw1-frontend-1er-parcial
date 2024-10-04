@@ -26,15 +26,32 @@ import { InspectorService } from "./services/inspector-service";
 import { HaloService } from "./services/halo-service";
 import { KeyboardService } from "./services/keyboard-service";
 import { ThemePicker } from "./components/theme-picker";
-import { sampleGraphs } from './config/sample-graphs';
+import KitchenSinkService from './services/kitchensink-service';
+// import { sampleGraphs } from './config/sample-graphs';
 
 // Definir la referencia del contenedor app
 const app = ref<HTMLElement | null>(null);
 let rappid: RappidService | null = null;
 onMounted(() => {
     // Inicializar el servicio Rappid
-    rappid = new RappidService(
-        app.value!,
+    // rappid = new RappidService(
+    //     app.value!,
+    //     new StencilService(),
+    //     new ToolbarService(),
+    //     new InspectorService(),
+    //     new HaloService(),
+    //     new KeyboardService()
+    // );
+
+    // // Iniciar Rappid
+    // rappid.startRappid();
+
+    // // Añadir el selector de temas
+    // const themePicker = new ThemePicker({ mainView: rappid });
+    // document.body.appendChild(themePicker.render().el);
+
+    const app = new KitchenSinkService(
+        document.getElementById('app')!,
         new StencilService(),
         new ToolbarService(),
         new InspectorService(),
@@ -42,15 +59,12 @@ onMounted(() => {
         new KeyboardService()
     );
 
-    // Iniciar Rappid
-    rappid.startRappid();
+    app.startRappid();
 
-    // Añadir el selector de temas
-    const themePicker = new ThemePicker({ mainView: rappid });
+    const themePicker = new ThemePicker({ mainView: app });
     document.body.appendChild(themePicker.render().el);
-
     // Cargar un diagrama de ejemplo
-    rappid.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
+    // rappid.graph.fromJSON(JSON.parse(sampleGraphs.emergencyProcedure));
 });
 </script>
 

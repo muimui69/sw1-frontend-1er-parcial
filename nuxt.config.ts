@@ -27,6 +27,7 @@ export default defineNuxtConfig({
     public: {
       appName: config.appName,
       apiDev: config.apiDev,
+      apiProd: config.apiProd
     }
   },
 

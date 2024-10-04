@@ -1,5 +1,47 @@
+import gql from 'graphql-tag'
+
+
+export const GET_MY_ROOMS = gql`
+  query RoomsByUser($userId: String!) {
+    RoomByUser(userId: $userId) {
+      id
+      title
+      isOpen
+      description
+      code
+      createdAt
+      updatedAt
+    }
+}
+`;
+
+
+export const GET_MY_SHARED_ROOMS = gql`
+ query RoomByHostInvitated($userId: String!) {
+  RoomByHostInvitated(userId: $userId) {
+    id
+    title
+    isOpen
+    description
+    code
+    host{
+      email
+      role
+    },
+    participants {
+      user{
+        email
+        password
+      }
+      role
+    }
+  }
+}
+`;
+
+
 export const GET_ROOMS = gql`
-  query GetRooms {
+  query Rooms {
     rooms {
       id
       title
@@ -15,6 +57,7 @@ export const GET_ROOMS = gql`
     }
   }
 `;
+
 
 export const GET_ROOM = gql`
   query GetRoom($id: ID!) {
