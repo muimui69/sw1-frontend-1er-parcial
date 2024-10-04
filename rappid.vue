@@ -38,7 +38,8 @@ let isShapeRemove = false;
 let isShapeUpdate = false;
 
 onMounted(() => {
-    socket = io('http://localhost:4000');
+    // socket = io('http://localhost:4000');
+    socket = io("https://specified-lisabeth-moiso-dev-d4582479.koyeb.app/")
 
     // const roomId = '53b2c98c-0649-4945-8e9e-8afba6edaf48';
     // socket.emit('join-room', roomId);
