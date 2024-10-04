@@ -1,26 +1,11 @@
-/*! JointJS+ v4.0.1 - HTML5 Diagramming Framework - TRIAL VERSION
-
-Copyright (c) 2024 client IO
-
- 2024-10-01 
-
-
-This Source Code Form is subject to the terms of the JointJS+ Trial License
-, v. 2.0. If a copy of the JointJS+ License was not distributed with this
-file, You can obtain one at https://www.jointjs.com/license
- or from the JointJS+ archive as was distributed by client IO. See the LICENSE file.*/
-
-
-// import * as joint from '@joint/plus';
 import * as joint from '../build/package/joint-plus';
-
 import { DirectedGraph } from '@joint/layout-directed-graph';
 import { StencilService } from './stencil-service';
 import { ToolbarService } from './toolbar-service';
 import { InspectorService } from './inspector-service';
 import { HaloService } from './halo-service';
 import { KeyboardService } from './keyboard-service';
-import * as appShapes from '../shapes/app-shapes';
+import * as appShapes from '../shapes/app-shapes'
 
 class KitchenSinkService {
 
@@ -87,23 +72,6 @@ class KitchenSinkService {
 
         this.commandManager = new joint.dia.CommandManager({ graph: graph });
 
-        // const paper = this.paper = new joint.dia.Paper({
-        //     width: 1000,
-        //     height: 1000,
-        //     gridSize: 10,
-        //     drawGrid: true,
-        //     model: graph,
-        //     cellViewNamespace: appShapes,
-        //     defaultConnector: { name: 'rounded' },
-        //     // defaultLink: new appShapes.app.Link() as unknown as joint.dia.Link,
-        //     defaultLink: <joint.dia.Link>new appShapes.Link(),
-        //     // defaultConnectionPoint: appShapes.app.Link.connectionPoint,
-        //     defaultConnectionPoint: appShapes.Link.connectionPoint,
-        //     interactive: { linkMove: false },
-        //     async: true,
-        //     sorting: joint.dia.Paper.sorting.APPROX
-        // });
-
         const paper = this.paper = new joint.dia.Paper({
             model: graph,
             width: 1000,
@@ -137,11 +105,15 @@ class KitchenSinkService {
         });
 
         paper.on('blank:contextmenu', (evt) => {
-            this.renderContextToolbar({ x: evt.clientX ?? 0, y: evt.clientY ?? 0 });
+            if (evt.clientX !== undefined && evt.clientY !== undefined) {
+                this.renderContextToolbar({ x: evt.clientX, y: evt.clientY });
+            }
         });
 
         paper.on('cell:contextmenu', (cellView, evt) => {
-            this.renderContextToolbar({ x: evt.clientX ?? 0, y: evt.clientY ?? 0 }, [cellView.model]);
+            if (evt.clientX !== undefined && evt.clientY !== undefined) {
+                this.renderContextToolbar({ x: evt.clientX, y: evt.clientY });
+            }
         });
 
         this.snaplines = new joint.ui.Snaplines({ paper: paper });
@@ -170,19 +142,6 @@ class KitchenSinkService {
 
     }
 
-    // initializeStencil() {
-
-    //     const { stencilService, paperScroller, snaplines } = this;
-    //     stencilService.create(paperScroller, snaplines);
-
-    //     this.renderPlugin('.stencil-container', stencilService.stencil);
-    //     stencilService.setShapes();
-
-    //     stencilService.stencil.on('element:drop', (elementView: joint.dia.ElementView) => {
-    //         this.selection.collection.reset([elementView.model]);
-    //     });
-    // }
-
     initializeStencil() {
 
         const { stencilService, paperScroller, snaplines } = this;
@@ -191,7 +150,7 @@ class KitchenSinkService {
         this.renderPlugin('.stencil-container', stencilService.stencil);
         stencilService.setShapes();
 
-        stencilService.stencil.on('element:drop', (elementView: joint.dia.ElementView) => {
+        stencilService.stencil?.on('element:drop', (elementView: joint.dia.ElementView) => {
 
             const model = elementView.model;
             console.log(model);
@@ -199,7 +158,7 @@ class KitchenSinkService {
             switch (model.get('type')) {
                 case 'LinkStencilHerencia':
                     const linkH = new appShapes.Herencia({
-                        source: { x: model.get('position')?.x ?? 0, y: model.get('position')?.y ?? 0 },
+                        source: { x: (model.get('position')?.x ?? 0), y: (model.get('position')?.y ?? 0) },
                         target: { x: (model.get('position')?.x ?? 0) + 250, y: model.get('position')?.y ?? 0 }
                     });
 
@@ -211,7 +170,7 @@ class KitchenSinkService {
                     break;
                 case 'LinkStencilAgregacion':
                     const linkA = new appShapes.Agregacion({
-                        source: { x: model.get('position')?.x ?? 0, y: model.get('position')?.y ?? 0 },
+                        source: { x: (model.get('position')?.x ?? 0), y: (model.get('position')?.y ?? 0) },
                         target: { x: (model.get('position')?.x ?? 0) + 250, y: model.get('position')?.y ?? 0 }
                     });
 
@@ -223,7 +182,7 @@ class KitchenSinkService {
                     break;
                 case 'LinkStencilComposicion':
                     const linkC = new appShapes.Composicion({
-                        source: { x: model.get('position')?.x ?? 0, y: model.get('position')?.y ?? 0 },
+                        source: { x: (model.get('position')?.x ?? 0), y: (model.get('position')?.y ?? 0) },
                         target: { x: (model.get('position')?.x ?? 0) + 250, y: model.get('position')?.y ?? 0 }
                     });
 
@@ -235,7 +194,7 @@ class KitchenSinkService {
                     break;
                 case 'LinkStencilDependencia':
                     const linkD = new appShapes.Dependencia({
-                        source: { x: model.get('position')?.x ?? 0, y: model.get('position')?.y ?? 0 },
+                        source: { x: (model.get('position')?.x ?? 0), y: (model.get('position')?.y ?? 0) },
                         target: { x: (model.get('position')?.x ?? 0) + 250, y: model.get('position')?.y ?? 0 }
                     });
 
@@ -319,7 +278,9 @@ class KitchenSinkService {
 
             if (evt.button === 2) {
                 evt.stopPropagation();
-                this.renderContextToolbar({ x: evt.clientX ?? 0, y: evt.clientY ?? 0 }, this.selection.collection.toArray());
+                if (evt.clientX !== undefined && evt.clientY !== undefined) {
+                    this.renderContextToolbar({ x: evt.clientX, y: evt.clientY }, this.selection.collection.toArray());
+                }
             }
 
         }, this);

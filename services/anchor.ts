@@ -1,4 +1,4 @@
-import { g, dia, anchors } from '@joint/plus';
+import { g, dia, anchors } from '../build/package/joint-plus';
 
 export const anchorNamespace = { ...anchors };
 

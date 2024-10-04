@@ -2,29 +2,25 @@
 
 Copyright (c) 2024 client IO
 
-2024-10-01
+ 2024-09-18 
+
 
 This Source Code Form is subject to the terms of the JointJS+ Trial License
 , v. 2.0. If a copy of the JointJS+ License was not distributed with this
 file, You can obtain one at https://www.jointjs.com/license
-or from the JointJS+ archive as was distributed by client IO. See the LICENSE file.*/
+ or from the JointJS+ archive as was distributed by client IO. See the LICENSE file.*/
 
-// import * as joint from '@joint/plus';
+
 import * as joint from '../build/package/joint-plus';
 import { dia, shapes, util } from '../build/package/joint-plus';
 import type { ColumnData } from './interfaces';
 //@ts-ignore
 import key from '../assets/key.svg';
-
 const cache = new Map();
 
+// export namespace app {
+
 export class Table extends shapes.standard.HeaderedRecord {
-
-    portLabelMarkup = [{
-        tagName: 'text',
-        selector: 'portLabel'
-    }];
-
     override defaults() {
         return util.defaultsDeep({
             type: 'Table',
@@ -68,9 +64,13 @@ export class Table extends shapes.standard.HeaderedRecord {
                     }
                 },
                 itemBodies_0: {
+                    // SVGRect which is an active magnet
+                    // Do not use `true` to prevent CSS effects on hover
                     magnet: 'item'
                 },
                 group_1: {
+                    // let the pointer events propagate to the group_0
+                    // which spans over 2 columns
                     pointerEvents: 'none'
                 },
                 itemLabels: {
@@ -87,14 +87,15 @@ export class Table extends shapes.standard.HeaderedRecord {
                     x: 'calc(0.5 * w - 30)'
                 },
                 iconsGroup_1: {
+                    // SVGGroup does not accept `x` attribute
                     refX: '50%',
                     refX2: -26
                 }
             }
-        }, joint.shapes.standard.HeaderedRecord.prototype.defaults);
+        }, super.defaults);
     }
 
-    override preinitialize(): void {
+    override  preinitialize(): void {
         this.markup = [{
             tagName: 'rect',
             selector: 'body'
@@ -127,6 +128,7 @@ export class Table extends shapes.standard.HeaderedRecord {
         }
     }
 
+
     setName(name: string, opt?: object) {
         return this.attr(['headerLabel', 'text'], name, opt);
     }
@@ -145,6 +147,7 @@ export class Table extends shapes.standard.HeaderedRecord {
 
     override toJSON() {
         const json = super.toJSON();
+        // keeping only the `columns` attribute
         delete json.items;
         return json;
     }
@@ -233,6 +236,10 @@ export class Link extends dia.Link {
         const link = linkView.model;
         const markerWidth = (link.get('type') === 'Link') ? link.getMarkerWidth(type) : 0;
         const opt: any = { offset: markerWidth, stroke: true };
+        // connection point for UML shapes lies on the root group containing all the shapes components
+        const modelType = view.model.get('type');
+        // taking the border stroke-width into account
+        if (modelType === 'standard.InscribedImage') { opt.selector = 'border'; }
         return joint.connectionPoints.boundary.call(this, line, view, magnet, opt, type, linkView);
     }
 
@@ -256,26 +263,133 @@ export class Link extends dia.Link {
     };
 }
 
+export class LinkStencilHerencia extends joint.shapes.standard.Rectangle {
+    override defaults() {
+        return joint.util.defaultsDeep({
+            type: 'LinkStencilHerencia',
+            size: { width: 50, height: 10 },
+            attrs: {
+                body: {
+                    fill: 'none',
+                    stroke: '#000000',
+                    strokeWidth: 2
+                },
+                label: {
+                    text: 'Link',
+                    fill: '#000000',
+                    fontSize: 10,
+                    fontWeight: 'normal'
+                }
+            }
+        }, joint.shapes.standard.Rectangle.prototype.defaults);
+    }
+}
+
+export class LinkStencilAgregacion extends joint.shapes.standard.Rectangle {
+    override defaults() {
+        return joint.util.defaultsDeep({
+            type: 'LinkStencilAgregacion',
+            size: { width: 50, height: 10 },
+            attrs: {
+                body: {
+                    fill: 'none',
+                    stroke: '#000000',
+                    strokeWidth: 2
+                },
+                label: {
+                    text: 'Link',
+                    fill: '#000000',
+                    fontSize: 10,
+                    fontWeight: 'normal'
+                }
+            }
+        }, joint.shapes.standard.Rectangle.prototype.defaults);
+    }
+}
+
+export class LinkStencilComposicion extends joint.shapes.standard.Rectangle {
+    override defaults() {
+        return joint.util.defaultsDeep({
+            type: 'LinkStencilComposicion',
+            size: { width: 50, height: 10 },
+            attrs: {
+                body: {
+                    fill: 'none',
+                    stroke: '#000000',
+                    strokeWidth: 2
+                },
+                label: {
+                    text: 'Link',
+                    fill: '#000000',
+                    fontSize: 10,
+                    fontWeight: 'normal'
+                }
+            }
+        }, joint.shapes.standard.Rectangle.prototype.defaults);
+    }
+}
+export class LinkStencilDependencia extends joint.shapes.standard.Rectangle {
+    override defaults() {
+        return joint.util.defaultsDeep({
+            type: 'LinkStencilDependencia',
+            size: { width: 50, height: 10 },
+            attrs: {
+                body: {
+                    fill: 'none',
+                    stroke: '#000000',
+                    strokeWidth: 2
+                },
+                label: {
+                    text: 'Link',
+                    fill: '#000000',
+                    fontSize: 10,
+                    fontWeight: 'normal'
+                }
+            }
+        }, joint.shapes.standard.Rectangle.prototype.defaults);
+    }
+}
+
 export class Herencia extends dia.Link {
     override defaults() {
         return {
             ...super.defaults,
             type: 'Herencia',
+            size: { width: 100, height: 30 },
+            // z: -1,
             attrs: {
+                body: {
+                    fill: 'none',
+                    stroke: '#A0A0A0',
+                    strokeWidth: 2
+                },
+                wrapper: {
+                    connection: true,
+                    strokeWidth: 10
+                },
                 line: {
-                    stroke: '#000000',
+                    connection: true,
+                    stroke: '#A0A0A0',
                     strokeWidth: 2,
                     targetMarker: {
                         type: 'path',
-                        d: 'M 20 -10 0 0 20 10 Z', // Flecha de herencia
+                        d: 'M 20 -10 0 0 20 10 Z', // Flecha para generalización
                         fill: 'white',
-                        stroke: '#000000',
+                        stroke: '#A0A0A0',
                     }
                 }
+
             }
         }
     }
     override markup = [{
+        tagName: 'path',
+        selector: 'wrapper',
+        attributes: {
+            'fill': 'none',
+            'stroke': 'transparent'
+        }
+    }, {
         tagName: 'path',
         selector: 'line',
         attributes: {
@@ -287,8 +401,31 @@ export class Herencia extends dia.Link {
         const link = linkView.model;
         const markerWidth = (link.get('type') === 'Link') ? link.getMarkerWidth(type) : 0;
         const opt: any = { offset: markerWidth, stroke: true };
+        // connection point for UML shapes lies on the root group containing all the shapes components
+        const modelType = view.model.get('type');
+        // taking the border stroke-width into account
+        if (modelType === 'standard.InscribedImage') { opt.selector = 'border'; }
         return joint.connectionPoints.boundary.call(this, line, view, magnet, opt, type, linkView);
     }
+
+    getMarkerWidth(type: any) {
+        const d = (type === 'source') ? this.attr('line/sourceMarker/d') : this.attr('line/targetMarker/d');
+        return this.getDataWidth(d);
+    }
+
+    getDataWidth(d: any) {
+        return this.getDataWidthCached(d);
+    }
+
+    private getDataWidthCached = function (d: string) {
+        if (cache.has(d)) {
+            return cache.get(d);
+        } else {
+            const bbox = (new joint.g.Path(d)).bbox();
+            cache.set(d, bbox ? bbox.width : 0);
+            return cache.get(d);
+        }
+    };
 }
 
 export class Agregacion extends dia.Link {
@@ -296,21 +433,40 @@ export class Agregacion extends dia.Link {
         return {
             ...super.defaults,
             type: 'Agregacion',
+            size: { width: 100, height: 30 },
+            // z: -1,
             attrs: {
+                body: {
+                    fill: 'none',
+                    stroke: '#A0A0A0',
+                    strokeWidth: 2
+                },
+                wrapper: {
+                    connection: true,
+                    strokeWidth: 10
+                },
                 line: {
-                    stroke: '#000000',
+                    connection: true,
+                    stroke: '#A0A0A0',
                     strokeWidth: 2,
                     targetMarker: {
                         type: 'path',
                         d: 'M 20 0 L 10 -10 L 0 0 L 10 10 Z', // Rombo vacío para agregación
-                        fill: 'white',
-                        stroke: '#000000'
+                        fill: 'white', // Vacío
+                        stroke: '#A0A0A0'
                     }
                 }
             }
         }
     }
     override markup = [{
+        tagName: 'path',
+        selector: 'wrapper',
+        attributes: {
+            'fill': 'none',
+            'stroke': 'transparent'
+        }
+    }, {
         tagName: 'path',
         selector: 'line',
         attributes: {
@@ -322,8 +478,31 @@ export class Agregacion extends dia.Link {
         const link = linkView.model;
         const markerWidth = (link.get('type') === 'Link') ? link.getMarkerWidth(type) : 0;
         const opt: any = { offset: markerWidth, stroke: true };
+        // connection point for UML shapes lies on the root group containing all the shapes components
+        const modelType = view.model.get('type');
+        // taking the border stroke-width into account
+        if (modelType === 'standard.InscribedImage') { opt.selector = 'border'; }
         return joint.connectionPoints.boundary.call(this, line, view, magnet, opt, type, linkView);
     }
+
+    getMarkerWidth(type: any) {
+        const d = (type === 'source') ? this.attr('line/sourceMarker/d') : this.attr('line/targetMarker/d');
+        return this.getDataWidth(d);
+    }
+
+    getDataWidth(d: any) {
+        return this.getDataWidthCached(d);
+    }
+
+    private getDataWidthCached = function (d: string) {
+        if (cache.has(d)) {
+            return cache.get(d);
+        } else {
+            const bbox = (new joint.g.Path(d)).bbox();
+            cache.set(d, bbox ? bbox.width : 0);
+            return cache.get(d);
+        }
+    };
 }
 
 export class Composicion extends dia.Link {
@@ -331,21 +510,40 @@ export class Composicion extends dia.Link {
         return {
             ...super.defaults,
             type: 'Composicion',
+            size: { width: 100, height: 30 },
+            z: -1,
             attrs: {
+                body: {
+                    fill: 'none',
+                    stroke: '#A0A0A0',
+                    strokeWidth: 2
+                },
+                wrapper: {
+                    connection: true,
+                    strokeWidth: 10
+                },
                 line: {
-                    stroke: '#000000',
+                    connection: true,
+                    stroke: '#A0A0A0',
                     strokeWidth: 2,
                     targetMarker: {
                         type: 'path',
                         d: 'M 20 0 L 10 -10 L 0 0 L 10 10 Z', // Rombo lleno para composición
-                        fill: '#000000',
-                        stroke: '#000000'
+                        fill: '#A0A0A0', // Lleno
+                        stroke: '#A0A0A0'
                     }
                 }
             }
         }
     }
     override markup = [{
+        tagName: 'path',
+        selector: 'wrapper',
+        attributes: {
+            'fill': 'none',
+            'stroke': 'transparent'
+        }
+    }, {
         tagName: 'path',
         selector: 'line',
         attributes: {
@@ -357,8 +555,31 @@ export class Composicion extends dia.Link {
         const link = linkView.model;
         const markerWidth = (link.get('type') === 'Link') ? link.getMarkerWidth(type) : 0;
         const opt: any = { offset: markerWidth, stroke: true };
+        // connection point for UML shapes lies on the root group containing all the shapes components
+        const modelType = view.model.get('type');
+        // taking the border stroke-width into account
+        if (modelType === 'standard.InscribedImage') { opt.selector = 'border'; }
         return joint.connectionPoints.boundary.call(this, line, view, magnet, opt, type, linkView);
     }
+
+    getMarkerWidth(type: any) {
+        const d = (type === 'source') ? this.attr('line/sourceMarker/d') : this.attr('line/targetMarker/d');
+        return this.getDataWidth(d);
+    }
+
+    getDataWidth(d: any) {
+        return this.getDataWidthCached(d);
+    }
+
+    private getDataWidthCached = function (d: string) {
+        if (cache.has(d)) {
+            return cache.get(d);
+        } else {
+            const bbox = (new joint.g.Path(d)).bbox();
+            cache.set(d, bbox ? bbox.width : 0);
+            return cache.get(d);
+        }
+    };
 }
 
 export class Dependencia extends dia.Link {
@@ -366,22 +587,42 @@ export class Dependencia extends dia.Link {
         return {
             ...super.defaults,
             type: 'Dependencia',
+            size: { width: 100, height: 30 },
+            // z: -1,
             attrs: {
+                body: {
+                    fill: 'none',
+                    stroke: '#A0A0A0',
+                    strokeWidth: 2
+                },
+                wrapper: {
+                    connection: true,
+                    strokeWidth: 10
+                },
                 line: {
-                    stroke: '#000000',
+                    connection: true,
+                    stroke: '#A0A0A0',
                     strokeWidth: 2,
-                    strokeDasharray: '5, 5', // Línea punteada para dependencia
+                    strokeDasharray: '5, 5', // Línea punteada
                     targetMarker: {
                         type: 'path',
                         d: 'M 20 -10 L 0 0 L 20 10', // Flecha abierta para dependencia
-                        fill: 'none',
-                        stroke: '#000000'
+                        fill: 'none', // Flecha abierta
+                        stroke: '#A0A0A0'
                     }
                 }
+
             }
         }
     }
     override markup = [{
+        tagName: 'path',
+        selector: 'wrapper',
+        attributes: {
+            'fill': 'none',
+            'stroke': 'transparent'
+        }
+    }, {
         tagName: 'path',
         selector: 'line',
         attributes: {
@@ -393,8 +634,31 @@ export class Dependencia extends dia.Link {
         const link = linkView.model;
         const markerWidth = (link.get('type') === 'Link') ? link.getMarkerWidth(type) : 0;
         const opt: any = { offset: markerWidth, stroke: true };
+        // connection point for UML shapes lies on the root group containing all the shapes components
+        const modelType = view.model.get('type');
+        // taking the border stroke-width into account
+        if (modelType === 'standard.InscribedImage') { opt.selector = 'border'; }
         return joint.connectionPoints.boundary.call(this, line, view, magnet, opt, type, linkView);
     }
+
+    getMarkerWidth(type: any) {
+        const d = (type === 'source') ? this.attr('line/sourceMarker/d') : this.attr('line/targetMarker/d');
+        return this.getDataWidth(d);
+    }
+
+    getDataWidth(d: any) {
+        return this.getDataWidthCached(d);
+    }
+
+    private getDataWidthCached = function (d: string) {
+        if (cache.has(d)) {
+            return cache.get(d);
+        } else {
+            const bbox = (new joint.g.Path(d)).bbox();
+            cache.set(d, bbox ? bbox.width : 0);
+            return cache.get(d);
+        }
+    };
 }
 
 const TableView = shapes.standard.RecordView;
@@ -404,12 +668,14 @@ Object.assign(shapes, {
         Table,
         TableView,
         Link,
-        Herencia,
-        Agregacion,
-        Composicion,
-        Dependencia
+        // Herencia,
+        // Agregacion,
+        // Association,
+        // Composicion,
+        // Dependencia,
     }
 });
+// }
 
 export const NavigatorElementView = joint.dia.ElementView.extend({
 
@@ -468,6 +734,6 @@ export const NavigatorLinkView = joint.dia.LinkView.extend({
     update: joint.util.noop
 });
 
+// re-export build-in shapes from rappid
 export const standard = joint.shapes.standard;
 
-// } 

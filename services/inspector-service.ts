@@ -655,65 +655,6 @@ export class InspectorService {
                     methods: { label: 'Methods', index: 4 } // Asegúrate de que los métodos están en el grupo
                 }
             },
-            'UMLClass': {
-                inputs: {
-                    attrs: {
-                        label: {
-                            text: {
-                                type: 'content-editable',
-                                label: 'Class Name',
-                                group: 'text',
-                                index: 1
-                            },
-                            fill: {
-                                type: 'color-palette',
-                                options: options.colorPalette,
-                                label: 'Text Color',
-                                group: 'text',
-                                index: 2
-                            }
-                        },
-                        '.attributes': {
-                            text: {
-                                type: 'content-editable',
-                                label: 'Attributes',
-                                group: 'attributes',
-                                index: 1
-                            }
-                        },
-                        '.methods': {
-                            text: {
-                                type: 'content-editable',
-                                label: 'Methods',
-                                group: 'methods',
-                                index: 2
-                            }
-                        },
-                        body: {
-                            fill: {
-                                type: 'color-palette',
-                                options: options.colorPalette,
-                                label: 'Body Fill',
-                                group: 'presentation',
-                                index: 1
-                            },
-                            stroke: {
-                                type: 'color-palette',
-                                options: options.colorPalette,
-                                label: 'Body Stroke',
-                                group: 'presentation',
-                                index: 2
-                            }
-                        }
-                    }
-                },
-                groups: {
-                    text: { label: 'Class Name', index: 1 },
-                    attributes: { label: 'Attributes', index: 2 },
-                    methods: { label: 'Methods', index: 3 },
-                    presentation: { label: 'Presentation', index: 4 }
-                }
-            }
         };
     }
 }

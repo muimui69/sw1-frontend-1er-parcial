@@ -17,14 +17,14 @@ import * as appShapes from '../shapes/app-shapes';
 
 export class StencilService {
 
-    stencil!: ui.Stencil;
+    stencil: ui.Stencil | undefined;
 
     create(paperScroller: ui.PaperScroller, snaplines: ui.Snaplines) {
 
         this.stencil = new ui.Stencil({
             paper: paperScroller,
             snaplines: snaplines,
-            width: 240,
+            width: 250,
             groups: this.getStencilGroups(),
             dropAnimation: true,
             groupsToggleButtons: true,
@@ -42,23 +42,25 @@ export class StencilService {
             layout: {
                 columns: 1,
                 marginX: 10,
-                marginY: 10,
-                columnGap: 10,
+                marginY: 10,  // Ajusta este valor para aumentar el espacio vertical entre los elementos
+                columnGap: 20,
                 columnWidth: 100,
-                rowHeight: 80,
+                rowHeight: 100,  // Ajusta este valor para aumentar el tamaño de las filas
             },
-            // Remove tooltip definition from clone
+
             dragStartClone: (cell: dia.Cell) => cell.clone().removeAttr('root/dataTooltip')
         });
     }
 
     setShapes() {
-        this.stencil.load(this.getStencilShapes());
+        if (this.stencil) {
+            this.stencil.load(this.getStencilShapes());
+        }
     }
 
     getStencilGroups() {
         return <{ [key: string]: ui.Stencil.Group }>{
-            uml: { index: 1, label: 'UML Objects' }
+            uml: { index: 1, label: 'UML Diagrams' }
         };
     }
 
@@ -137,34 +139,35 @@ export class StencilService {
                     }
                 },
                 {
-                    type: 'Herencia',  // Representación para Herencia (Generalización)
+                    type: 'LinkStencilHerencia',  // Dummy representation for links
                     attrs: {
                         body: { fill: 'none', stroke: '#000000', strokeWidth: 2 },
                         label: { text: 'Herencia', fill: '#000000', fontSize: 10 }
                     }
                 },
                 {
-                    type: 'Agregacion',  // Representación para Agregación
+                    type: 'LinkStencilAgregacion',  // Dummy representation for links
                     attrs: {
                         body: { fill: 'none', stroke: '#000000', strokeWidth: 2 },
-                        label: { text: 'Agregación', fill: '#000000', fontSize: 10 }
+                        label: { text: 'Agregacion', fill: '#000000', fontSize: 10 }
                     }
                 },
                 {
-                    type: 'Composicion',  // Representación para Composición
+                    type: 'LinkStencilComposicion',  // Dummy representation for links
                     attrs: {
                         body: { fill: 'none', stroke: '#000000', strokeWidth: 2 },
-                        label: { text: 'Composición', fill: '#000000', fontSize: 10 }
+                        label: { text: 'Composicion', fill: '#000000', fontSize: 10 }
                     }
                 },
                 {
-                    type: 'Dependencia',  // Representación para Dependencia
+                    type: 'LinkStencilDependencia',  // Dummy representation for links
                     attrs: {
                         body: { fill: 'none', stroke: '#000000', strokeWidth: 2 },
                         label: { text: 'Dependencia', fill: '#000000', fontSize: 10 }
                     }
                 },
             ],
+
         };
     }
 }

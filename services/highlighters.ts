@@ -1,4 +1,4 @@
-import { dia } from '@joint/plus';
+import { dia } from '../build/package/joint-plus';
 import { Table } from '../shapes/app-shapes';
 
 const PADDING = {
