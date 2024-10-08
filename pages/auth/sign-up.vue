@@ -31,7 +31,7 @@ const handleRegister = async () => {
         onError((error) => {
             console.error('Error durante el register:', error);
         });
-        router.push('/sign-in');
+        router.push('/auth/sign-in');
     } catch (error) {
         console.error('Error durante el registro:', error);
     }

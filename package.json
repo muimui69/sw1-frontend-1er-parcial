@@ -21,6 +21,7 @@
     "clsx": "^2.1.1",
     "graphql": "^16.9.0",
     "graphql-tag": "^2.12.6",
+    "js2xmlparser": "^5.0.0",
     "link": "^2.1.1",
     "lucide-vue-next": "^0.447.0",
     "nuxt": "^3.13.0",

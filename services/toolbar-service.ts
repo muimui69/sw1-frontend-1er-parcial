@@ -118,6 +118,20 @@ export class ToolbarService {
                 },
                 {
                     type: 'button',
+                    name: 'xml',
+                    group: 'export',
+                    text: 'Export XML',
+                    attrs: {
+                        button: {
+                            id: 'btn-xml',
+                            'data-tooltip': 'Open as XML in a pop-up',
+                            'data-tooltip-position': 'top',
+                            'data-tooltip-position-selector': '.toolbar-container'
+                        }
+                    }
+                },
+                {
+                    type: 'button',
                     name: 'print',
                     group: 'print',
                     attrs: {

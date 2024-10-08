@@ -4,7 +4,8 @@ export const envSchema = z.object({
     APP_NAME: z.string().nonempty(),
     API_DEV: z.string().url(),
     API_PROD: z.string().url(),
-    // API_SOCKET: z.string().url()
+    URI_SOCKET_DEV: z.string().url(),
+    URI_SOCKET_PROD: z.string().url()
 })
 
 export function validateEnv(env: Record<string, string | undefined>) {
@@ -23,6 +24,7 @@ export function loadConfig(env: Record<string, string | undefined>) {
         appName: parsedEnv.data.APP_NAME,
         apiDev: parsedEnv.data.API_DEV,
         apiProd: parsedEnv.data.API_PROD,
-        // apiSocket: parsedEnv.data.API_SOCKET
+        uriSocketDev: parsedEnv.data.URI_SOCKET_DEV,
+        uriSocketProd: parsedEnv.data.URI_SOCKET_PROD
     }
 }

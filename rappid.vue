@@ -16,6 +16,7 @@
 </template>
 
 <script setup lang="ts">
+
 import { onMounted, ref } from 'vue'
 
 import { StencilService } from "./services/stencil-service";
@@ -26,23 +27,33 @@ import { KeyboardService } from "./services/keyboard-service";
 import { ThemePicker } from "./components/theme-picker";
 import KitchenSinkService from './services/kitchensink-service';
 import { io, Socket } from 'socket.io-client';
-// import { setupSocketIntegration } from './services/socket';
 import { Table } from './shapes/app-shapes';
 
+const runtimeConfig = useRuntimeConfig();
+const route = useRoute();
+
 const appRef = ref<HTMLElement | null>(null);
-let socket: Socket;
 
 let isShapeAdd = false;
 let isShapeMove = false;
 let isShapeRemove = false;
 let isShapeUpdate = false;
 
-onMounted(() => {
-    // socket = io('http://localhost:4000');
-    socket = io("https://specified-lisabeth-moiso-dev-d4582479.koyeb.app/")
+let socket: Socket;
 
-    // const roomId = '53b2c98c-0649-4945-8e9e-8afba6edaf48';
-    // socket.emit('join-room', roomId);
+
+onMounted(() => {
+
+    const uriSocket = process.env.NODE_ENV === 'production'
+        ? runtimeConfig.public.uriSocketProd
+        : runtimeConfig.public.uriSocketDev;
+
+    socket = io(uriSocket);
+
+    const roomId = route.params.code;
+    console.log("roomID", roomId)
+
+    socket.emit('joinRoom', roomId);
 
     const app = new KitchenSinkService(
         document.getElementById('app')!,
@@ -55,45 +66,10 @@ onMounted(() => {
 
     app.startRappid();
 
+
+
     const themePicker = new ThemePicker({ mainView: app });
     document.body.appendChild(themePicker.render().el);
-
-    // app.graph.on('add', (cell) => {
-    //     console.log('Celda añadida:', cell);
-
-    //     if (isShapeAdd) return;
-
-    //     const tableData = {
-    //         id: cell.id,
-    //         name: cell.get('attrs')['headerLabel']['text'] || '',
-    //         tabColor: cell.get('attrs')['tabColor']['fill'] || '#FFFFFF',
-    //         position: cell.position(),
-    //         columns: cell.get('columns') || [],
-    //     };
-
-    //     socket.emit('shape-add', JSON.stringify(tableData));
-    //     console.log('Tabla enviada al servidor:', tableData);
-    // });
-
-    // app.graph.on('add', (cell) => {
-    //     if (isShapeAdd) return;
-
-    //     const attrs = cell.get('attrs') || {};
-    //     const headerLabel = attrs['headerLabel'] || {};
-    //     const tabColor = attrs['tabColor'] || {};
-
-    //     const tableData = {
-    //         id: cell.id,
-    //         name: headerLabel['text'] || '',
-    //         tabColor: tabColor['fill'] || '#FFFFFF',
-    //         position: cell.position(),
-    //         columns: cell.get('columns') || [],
-    //     };
-
-    //     socket.emit('shape-add', JSON.stringify(tableData));
-    //     console.log('Tabla enviada al servidor:', tableData);
-    // });
-
 
     app.graph.on('add', (cell) => {
         if (isShapeAdd) return;
@@ -108,7 +84,7 @@ onMounted(() => {
             tabColor: tabColor['fill'] || '#FFFFFF',
             position: cell.position(),
             columns: cell.get('columns') || [],
-            attrs: cell.get('attrs') || {}, // Incluimos todos los atributos
+            attrs: cell.get('attrs') || {},
         };
 
         socket.emit('shape-add', JSON.stringify(tableData));
@@ -145,7 +121,6 @@ onMounted(() => {
         if (isShapeUpdate) return;
 
         if (cell.isElement()) {
-            // Verificamos si el nombre ha cambiado
             if (cell.hasChanged('attrs/headerLabel/text')) {
                 const updateData = {
                     id: cell.id,
@@ -172,28 +147,6 @@ onMounted(() => {
             socket.emit('shape-update', updateData);
         }
     });
-
-
-
-    // // Recepción de 'shape-add'
-    // socket.on('shape-add', (data) => {
-    //     const shapeData = JSON.parse(data);
-
-    //     if (!app.graph.getCell(shapeData.id)) {
-    //         isShapeAdd = true;  // Evita reemitir el evento desde el cliente
-    //         const table = new Table({ id: shapeData.id })  // Establece el mismo ID
-    //             .setName(shapeData.name)
-    //             .setTabColor(shapeData.tabColor)
-    //             .position(shapeData.position.x, shapeData.position.y)
-    //             .setColumns(shapeData.columns)
-    //             .addTo(app.graph);
-
-    //         console.log("Forma añadida desde el servidor:", shapeData, table);
-    //         isShapeAdd = false;  // Resetea la bandera
-    //     } else {
-    //         console.log(`Forma con ID ${shapeData.id} ya existe.`);
-    //     }
-    // });
 
     socket.on('shape-add', (data) => {
         const shapeData = JSON.parse(data);
@@ -263,7 +216,6 @@ onMounted(() => {
     });
 
 
-    // Recepción de 'shape-update'
     socket.on('shape-update', (data) => {
         console.log('Cliente recibió shape-update:', data);
         const cell = app.graph.getCell(data.id);

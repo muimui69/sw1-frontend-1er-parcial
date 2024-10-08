@@ -29,6 +29,8 @@ export default defineNuxtConfig({
       appName: config.appName,
       apiDev: config.apiDev,
       apiProd: config.apiProd,
+      uriSocketDev: config.uriSocketDev,
+      uriSocketProd: config.uriSocketProd
     }
   },
 

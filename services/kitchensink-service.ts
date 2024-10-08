@@ -6,6 +6,7 @@ import { InspectorService } from './inspector-service';
 import { HaloService } from './halo-service';
 import { KeyboardService } from './keyboard-service';
 import * as appShapes from '../shapes/app-shapes'
+import { parse } from "js2xmlparser";
 
 class KitchenSinkService {
 
@@ -470,6 +471,7 @@ class KitchenSinkService {
         this.toolbarService.toolbar?.on({
             'svg:pointerclick': this.openAsSVG.bind(this),
             'png:pointerclick': this.openAsPNG.bind(this),
+            'xml:pointerclick': this.openAsXML.bind(this),
             'to-front:pointerclick': this.applyOnSelection.bind(this, 'toFront'),
             'to-back:pointerclick': this.applyOnSelection.bind(this, 'toBack'),
             'layout:pointerclick': this.layoutDirectedGraph.bind(this),
@@ -547,6 +549,32 @@ class KitchenSinkService {
             grid: true
         });
     }
+
+    openAsXML() {
+        this.paper.hideTools();
+
+        const graphJSON = this.graph.toJSON();
+
+        const xml = parse("graph", graphJSON);
+        console.log(">>>>>>>>>>>>>>>>>>>>>>", xml)
+
+        const blob = new Blob([xml], { type: 'application/xml' });
+        const url = URL.createObjectURL(blob);
+
+
+
+        // const link = document.createElement('a');
+        // link.href = url;
+        // link.download = 'diagram.xml';
+        // document.body.appendChild(link);
+        // link.click();
+        // document.body.removeChild(link);
+
+        // URL.revokeObjectURL(url);
+
+        this.paper.showTools();
+    }
+
 
     layoutDirectedGraph() {
 
