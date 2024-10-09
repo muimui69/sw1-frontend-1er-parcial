@@ -51,3 +51,14 @@ export interface User {
     __typename: string;
 }
 
+
+export interface InvitationsByHost {
+    InvitationsByHost: InvitationsByHostElement[];
+}
+
+export interface InvitationsByHostElement {
+    id: string;
+    email: string;
+    status: string;
+    __typename: string;
+}

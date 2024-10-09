@@ -12,7 +12,6 @@ import { useUserStore } from '@/stores/user';
 const title = ref('');
 const description = ref('');
 const userStore = useUserStore();
-const roomsStore = useRoomsStore();
 
 const { mutate: createRoom, onError } = useMutation(CREATE_ROOM_MUTATION);
 
@@ -31,6 +30,7 @@ const handleCreateRoom = async () => {
                 hostId: hostId,
             },
         });
+
 
         onError((error) => {
             console.error('Error al crear la sala:', error);

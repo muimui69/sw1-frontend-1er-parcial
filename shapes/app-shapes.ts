@@ -92,7 +92,8 @@ export class Table extends shapes.standard.HeaderedRecord {
                     refX: '50%',
                     refX2: -26
                 }
-            }
+            },
+
         }, super.defaults);
     }
 
@@ -269,7 +270,7 @@ export class LinkStencilHerencia extends joint.shapes.standard.Rectangle {
     override defaults() {
         return joint.util.defaultsDeep({
             type: 'LinkStencilHerencia',
-            size: { width: 50, height: 10 },
+            size: { width: 50, height: 10 },  // Representación en el stencil
             attrs: {
                 body: {
                     fill: 'none',
@@ -277,7 +278,7 @@ export class LinkStencilHerencia extends joint.shapes.standard.Rectangle {
                     strokeWidth: 2
                 },
                 label: {
-                    text: 'Link',
+                    text: 'Herencia',
                     fill: '#000000',
                     fontSize: 10,
                     fontWeight: 'normal'
@@ -286,6 +287,7 @@ export class LinkStencilHerencia extends joint.shapes.standard.Rectangle {
         }, joint.shapes.standard.Rectangle.prototype.defaults);
     }
 }
+
 
 export class LinkStencilAgregacion extends joint.shapes.standard.Rectangle {
     override defaults() {
@@ -399,6 +401,7 @@ export class Herencia extends dia.Link {
         }
     }]
 
+
     static connectionPoint(line: any, view: any, magnet: any, _opt: any, type: any, linkView: any): joint.g.Point {
         const link = linkView.model;
         const markerWidth = (link.get('type') === 'Link') ? link.getMarkerWidth(type) : 0;
@@ -409,6 +412,8 @@ export class Herencia extends dia.Link {
         if (modelType === 'standard.InscribedImage') { opt.selector = 'border'; }
         return joint.connectionPoints.boundary.call(this, line, view, magnet, opt, type, linkView);
     }
+
+
 
     getMarkerWidth(type: any) {
         const d = (type === 'source') ? this.attr('line/sourceMarker/d') : this.attr('line/targetMarker/d');

@@ -27,17 +27,24 @@ import { KeyboardService } from "./services/keyboard-service";
 import { ThemePicker } from "./components/theme-picker";
 import KitchenSinkService from './services/kitchensink-service';
 import { io, Socket } from 'socket.io-client';
-import { Table } from './shapes/app-shapes';
+import { Table, Link, Herencia, Composicion, Agregacion, Dependencia } from './shapes/app-shapes';
 
 const runtimeConfig = useRuntimeConfig();
 const route = useRoute();
 
-const appRef = ref<HTMLElement | null>(null);
 
 let isShapeAdd = false;
 let isShapeMove = false;
 let isShapeRemove = false;
 let isShapeUpdate = false;
+
+
+// Nuevas variables para manejar enlaces
+let isLinkAdd = false;
+let isLinkMove = false;
+let isLinkRemove = false;
+let isLinkUpdate = false;
+
 
 let socket: Socket;
 
@@ -72,7 +79,7 @@ onMounted(() => {
     document.body.appendChild(themePicker.render().el);
 
     app.graph.on('add', (cell) => {
-        if (isShapeAdd) return;
+        if (isShapeAdd || cell.isLink()) return;
 
         const attrs = cell.get('attrs') || {};
         const headerLabel = attrs['headerLabel'] || {};
@@ -91,6 +98,64 @@ onMounted(() => {
         console.log('Tabla enviada al servidor:', tableData);
     });
 
+    app.graph.on('add', (cell) => {
+        if (isLinkAdd || !cell.isLink()) return;
+
+        const attrs = cell.get('attrs') || {};
+
+        // Obtén los puntos de origen y destino del enlace
+        const source = cell.get('source');
+        const target = cell.get('target');
+
+        const linkData = {
+            id: cell.id,
+            type: cell.get('type') || 'Link',
+            source: {
+                x: source?.x || 0,
+                y: source?.y || 0
+            },
+            target: {
+                x: target?.x || 0,
+                y: target?.y || 0
+            },
+            attrs: attrs,
+            position: cell.position(),
+            size: {
+                width: cell.get('size').width || 0,
+                height: cell.get('size').height || 0,
+            },
+            z: cell.get('z'),
+        };
+
+        socket.emit('link-add', JSON.stringify(linkData)); // Envía el enlace al servidor
+        console.log('Enlace enviado al servidor:', linkData);
+    });
+
+
+    app.graph.on('change:source change:target', (cell) => {
+        if (cell.isLink()) {
+            // Evita duplicar eventos si ya está en movimiento
+            if (isLinkMove) return;
+
+            // Convertir el enlace a JSON y agregar la ID de la sala
+            const linkData = cell.toJSON();
+            linkData.roomId = roomId;  // Asegurarse de que la ID de la sala está presente
+
+            // Verificación adicional para asegurar que el ID del enlace es válido
+            if (!linkData.id) {
+                console.error('El enlace no tiene un ID válido para enviar al servidor.');
+                return;
+            }
+
+            // Emitir el evento al servidor solo si todo es correcto
+            isLinkMove = true;  // Evitar reemitir durante el movimiento
+            socket.emit('link-update', JSON.stringify(linkData));  // Enviar actualización al servidor
+            console.log('Enlace actualizado enviado al servidor:', linkData);
+
+            isLinkMove = false;  // Reiniciar flag después de enviar
+        }
+    });
+
 
     // Evento 'change:position'
     app.graph.on('change:position', (cell) => {
@@ -106,16 +171,53 @@ onMounted(() => {
         console.log('Movimiento de forma enviado al servidor:', moveData);
     });
 
+    app.graph.on('change:position', (cell) => {
+        if (isLinkMove) return;  // Evitar emitir el evento si ya se está moviendo
 
+        if (cell.isLink()) {  // Verifica si la celda es un enlace
+            const linkData = {
+                id: cell.id,
+                type: cell.get('type') || 'Link',
+                source: cell.get('source'),
+                target: cell.get('target'),
+                size: {
+                    width: cell.get('size').width || 0,
+                    height: cell.get('size').height || 0,
+                },
+                z: cell.get('z'),
+                attrs: cell.get('attrs'),
+                roomId: roomId, // Incluye la ID de la sala
+            };
+
+            socket.emit('link-move', JSON.stringify(linkData));  // Envía los datos al servidor
+            console.log('Enlace movido enviado al servidor:', linkData);
+        }
+    });
+
+
+
+    // Evento para eliminar clases (shapes)
     app.graph.on('remove', (cell) => {
-        console.log('Evento remove disparado para la celda:', cell.id);
+        console.log('Evento remove disparado para la celda (clase):', cell.id);
         if (isShapeRemove) return;
 
-        if (cell.isElement()) {
+        if (cell.isElement()) {  // Verifica si es un elemento (clase)
             socket.emit('shape-remove', JSON.stringify({ id: cell.id }));
             console.log('Forma eliminada enviada al servidor:', cell.id);
         }
     });
+
+    // Evento para eliminar enlaces (links)
+    app.graph.on('remove', (cell) => {
+        console.log('Evento remove disparado para la celda (enlace):', cell.id);
+        if (isLinkRemove) return;
+
+        if (cell.isLink()) {  // Verifica si es un enlace (link)
+            socket.emit('link-remove', JSON.stringify({ id: cell.id }));
+            console.log('Enlace eliminado enviado al servidor:', cell.id);
+        }
+    });
+
 
     app.graph.on('change:attrs', (cell, attrs) => {
         if (isShapeUpdate) return;
@@ -148,6 +250,7 @@ onMounted(() => {
         }
     });
 
+
     socket.on('shape-add', (data) => {
         const shapeData = JSON.parse(data);
 
@@ -166,7 +269,6 @@ onMounted(() => {
                     tabColor: {
                         fill: shapeData.tabColor || '#6C6C6C',
                     },
-                    // Agrega otros atributos necesarios aquí
                 },
                 position: shapeData.position,
                 columns: shapeData.columns || [],
@@ -239,6 +341,143 @@ onMounted(() => {
         } else {
             console.log(`No se encontró la forma con ID ${data.id} para actualizar.`);
         }
+    });
+
+    socket.on('link-add', (linkDataStr) => {
+        const linkData = JSON.parse(linkDataStr);  // Parsea los datos JSON
+        console.log('Enlace recibido del servidor ::::::::::::::::::::::::::::::::::::::', linkData);
+
+        // Verificar si el enlace ya existe
+        const existingLink = app.graph.getCell(linkData.id);
+        if (!existingLink) {
+            isLinkAdd = true;
+            // Crea el enlace en el gráfico
+            const link = new Link({
+                source: linkData.source,
+                target: linkData.target,
+                attrs: linkData.attrs,
+                size: linkData.size,
+                z: linkData.z,
+                id: linkData.id
+            });
+
+            link.addTo(app.graph);
+            isLinkAdd = false;
+            console.log('Enlace agregado al gráfico.');
+        } else {
+            console.log('Enlace ya existe en el gráfico.');
+        }
+    });
+
+
+
+    socket.on('link-remove', (linkDataStr) => {
+        const linkData = JSON.parse(linkDataStr);  // Parsear los datos JSON
+        console.log('Cliente recibió link-remove:', linkData);
+
+        const link = app.graph.getCell(linkData.id);  // Buscar el enlace por su ID
+        if (link) {
+            link.remove();  // Eliminar el enlace del gráfico
+            console.log('Enlace eliminado del gráfico:', linkData.id);
+        } else {
+            console.log(`No se encontró el enlace con ID ${linkData.id} para eliminar.`);
+        }
+    });
+
+    socket.on('link-move', (data) => {
+        console.log('Cliente recibió link-move:', data);
+        const moveData = JSON.parse(data);
+
+        const link = app.graph.getCell(moveData.id);
+        if (link && link.isLink()) {
+            console.log('Enlace encontrado para mover:', link);
+            isLinkMove = true; // Evita reemitir el evento
+
+            // Actualiza los puntos de origen y destino del enlace
+            link.set('source', moveData.source);
+            link.set('target', moveData.target);
+
+            console.log('Enlace movido a nuevas posiciones:', moveData.source, moveData.target);
+            isLinkMove = false;
+        } else {
+            console.log(`No se encontró el enlace con ID ${moveData.id} para mover.`);
+        }
+    });
+
+
+    // socket.on('link-update', (linkData) => {
+    //     console.log('Cliente recibió link-update:', linkData);
+
+    //     // Parsear los datos recibidos
+    //     const linkUpdate = JSON.parse(linkData);
+
+    //     // Verificar si el enlace tiene un ID válido
+    //     const linkId = linkUpdate.id;
+    //     if (!linkId) {
+    //         console.error('ID del enlace es indefinido. No se puede proceder con la actualización.');
+    //         return;
+    //     }
+
+    //     // Buscar el enlace en el gráfico usando el ID
+    //     const link = app.graph.getCell(linkId);
+    //     if (!link) {
+    //         console.error(`No se encontró el enlace con ID ${linkId} para actualizar.`);
+    //         return;
+    //     }
+
+    //     // Actualizar las propiedades del enlace con los datos recibidos
+    //     isLinkMove = true;  // Evitar reemitir durante la actualización
+
+    //     // Actualizar source y target
+    //     link.set('source', linkUpdate.source);
+    //     link.set('target', linkUpdate.target);
+
+    //     // Actualizar los vértices (si es necesario)
+    //     if (linkUpdate.vertices) {
+    //         link.set('vertices', linkUpdate.vertices);
+    //     }
+
+    //     console.log('Enlace actualizado:', link);
+
+    //     isLinkMove = false;  // Reiniciar el flag después de actualizar
+    // });
+
+
+    socket.on('link-update', (data) => {
+        const linkUpdate = JSON.parse(data);
+        const linkId = linkUpdate.id; // Asegúrate de extraer el id del enlace desde los datos
+
+        console.log('Cliente recibió link-update:', linkUpdate);
+
+        // Verifica que `linkId` esté definido
+        if (!linkId) {
+            console.error('ID del enlace es indefinido. No se puede proceder con la actualización.');
+            return;
+        }
+
+        // Buscar el enlace en el gráfico usando el ID
+        const link = app.graph.getCell(linkId);
+
+        if (!link) {
+            console.error(`No se encontró el enlace con ID ${linkId} para actualizar.`);
+            return;
+        }
+
+        // Si el enlace fue encontrado, procede con la actualización
+        isLinkMove = true;  // Evitar reemitir durante la actualización
+
+        // Actualizar source y target
+        link?.set('source', linkUpdate.source);
+        link?.set('target', linkUpdate.target);
+
+        // Actualizar los vértices (si es necesario)
+        if (linkUpdate.vertices) {
+            link.set('vertices', linkUpdate.vertices);
+        }
+
+        console.log('Enlace actualizado:', link);
+
+        isLinkMove = false;  // Reiniciar el flag después de actualizar
     });
 
 

@@ -71,7 +71,7 @@ definePageMeta({
                             <template v-if="!roomsStore.loading">
                                 <TableRow v-for="room in roomsStore.sharedRooms" :key="room.id">
                                     <TableCell class="font-medium">{{ room.title }}</TableCell>
-                                    <TableCell>{{ room.isOpen ? 'Abierta' : 'Cerrada' }}</TableCell>
+                                    <TableCell>{{ room.isOpen ? 'Sala abierta' : 'Sala cerrada' }}</TableCell>
                                     <TableCell>
                                         <ul>
                                             <li v-for="participant in room.participants" :key="participant.user.email">

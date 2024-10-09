@@ -19,30 +19,31 @@ export const CREATE_ROOM_MUTATION = gql`
 `;
 
 export const INVITE_TO_ROOM_MUTATION = gql`
-  mutation InviteToRoom($roomId: ID!, $email: String!) {
-    inviteToRoom(roomId: $roomId, email: $email) {
-      id
-      title
-      invitations {
-        email
-        status
-      }
+  mutation AddCollaborators($roomId: String!, $emails: [String!]!) {
+  addCollaborators(roomId: $roomId, emails: $emails) {
+    title
+    description
+    host {
+      email
+      username
     }
   }
+}
+
 `;
 
-export const ACCEPT_INVITATION_MUTATION = gql`
-  mutation AcceptInvitation($roomId: ID!) {
-    acceptInvitation(roomId: $roomId) {
-      id
-      title
-      participants {
-        user {
-          username
-          email
-        }
-        role
-      }
-    }
-  }
-`;
+// export const ACCEPT_INVITATION_MUTATION = gql`
+//   mutation AcceptInvitation($roomId: ID!) {
+//     acceptInvitation(roomId: $roomId) {
+//       id
+//       title
+//       participants {
+//         user {
+//           username
+//           email
+//         }
+//         role
+//       }
+//     }
+//   }
+// `;

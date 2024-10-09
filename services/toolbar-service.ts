@@ -120,7 +120,8 @@ export class ToolbarService {
                     type: 'button',
                     name: 'xml',
                     group: 'export',
-                    text: 'Export XML',
+                    // text: 'Export XML',
+                    text: 'Guardar cambios',
                     attrs: {
                         button: {
                             id: 'btn-xml',

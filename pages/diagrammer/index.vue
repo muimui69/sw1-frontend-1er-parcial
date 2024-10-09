@@ -25,11 +25,12 @@ import type { User } from '@/lib/graphql/interface/user';
 const userStore = useUserStore();
 const roomsStore = useRoomsStore();
 
+
 watch(
     () => userStore.user as User,
     (newUser) => {
         if (newUser?.id) {
-            roomsStore.fetchRoomsByUser(newUser.id); // Llamamos al store para cargar las salas
+            roomsStore.fetchRoomsByUser(newUser.id);
         }
     },
     { immediate: true }
@@ -71,7 +72,7 @@ definePageMeta({
                             <template v-if="!roomsStore.loading">
                                 <TableRow v-for="room in roomsStore.rooms" :key="room.id">
                                     <TableCell class="font-medium">{{ room.title }}</TableCell>
-                                    <TableCell>{{ room.isOpen ? 'Abierta' : 'Cerrada' }}</TableCell>
+                                    <TableCell>{{ room.isOpen ? 'Sala abierta' : 'Sala cerrada' }}</TableCell>
                                     <TableCell class="text-right">
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>

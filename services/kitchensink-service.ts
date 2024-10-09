@@ -79,8 +79,8 @@ class KitchenSinkService {
             height: 1000,
             gridSize: 20,
             drawGrid: true,
-            // interactive: { linkMove: false },
-            interactive: true, // añadido
+            interactive: { linkMove: false },
+            // interactive: true, // añadido
             defaultConnector: { name: 'rounded' }, // añadido
             async: true,
             // frozen: true, // añadido
@@ -101,7 +101,8 @@ class KitchenSinkService {
             //         }
             //     }
             // },    
-            defaultLink: <joint.dia.Link>new appShapes.Link(),
+            // defaultLink: <joint.dia.Link>new appShapes.Link(),
+            defaultLink: new joint.shapes.standard.Link(),
             defaultConnectionPoint: appShapes.Link.connectionPoint,
         });
 
@@ -155,12 +156,12 @@ class KitchenSinkService {
 
             const model = elementView.model;
             console.log(model);
-            console.log(model.get('type'));
+            console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>", model.get('type'));
             switch (model.get('type')) {
                 case 'LinkStencilHerencia':
                     const linkH = new appShapes.Herencia({
                         source: { x: (model.get('position')?.x ?? 0), y: (model.get('position')?.y ?? 0) },
-                        target: { x: (model.get('position')?.x ?? 0) + 250, y: model.get('position')?.y ?? 0 }
+                        target: { x: (model.get('position')?.x ?? 0) + 250, y: model.get('position')?.y ?? 0 },
                     });
 
                     // Añadir el enlace al gráfico

@@ -48,6 +48,7 @@ export class StencilService {
                 rowHeight: 100,  // Ajusta este valor para aumentar el tamaño de las filas
             },
 
+
             dragStartClone: (cell: dia.Cell) => cell.clone().removeAttr('root/dataTooltip')
         });
     }
@@ -60,7 +61,7 @@ export class StencilService {
 
     getStencilGroups() {
         return <{ [key: string]: ui.Stencil.Group }>{
-            uml: { index: 1, label: 'UML Diagrams' }
+            uml: { index: 1, label: 'UML Objects' },
         };
     }
 
@@ -140,33 +141,102 @@ export class StencilService {
                     }
                 },
                 {
-                    type: 'LinkStencilHerencia',  // Dummy representation for links
-                    attrs: {
-                        body: { fill: 'none', stroke: '#000000', strokeWidth: 2 },
-                        label: { text: 'Herencia', fill: '#000000', fontSize: 10 }
-                    }
+                    type: 'LinkStencilHerencia',
+                    markup: [
+                        {
+                            tagName: 'path',
+                            selector: 'line',
+                            attributes: {
+                                fill: 'none',
+                                stroke: '#A0A0A0',
+                                'stroke-width': 2,
+                                d: 'M 0 0 L 120 0'
+                            }
+                        },
+                        {
+                            tagName: 'path',
+                            selector: 'targetMarker',
+                            attributes: {
+                                fill: 'white',
+                                stroke: '#A0A0A0',
+                                d: 'M 120 -16 150 0 120 16 Z'
+                            }
+                        }
+                    ]
                 },
                 {
-                    type: 'LinkStencilAgregacion',  // Dummy representation for links
-                    attrs: {
-                        body: { fill: 'none', stroke: '#000000', strokeWidth: 2 },
-                        label: { text: 'Agregacion', fill: '#000000', fontSize: 10 }
-                    }
+                    type: 'LinkStencilAgregacion',  // Representación para el link de agregación
+                    markup: [
+                        {
+                            tagName: 'path',
+                            selector: 'line',
+                            attributes: {
+                                fill: 'none',
+                                stroke: '#A0A0A0',   // Color de la línea
+                                'stroke-width': 2,    // Grosor de la línea
+                                d: 'M 0 0 L 120 0'    // Dibuja la línea horizontalmente
+                            }
+                        },
+                        {
+                            tagName: 'path',
+                            selector: 'targetMarker',
+                            attributes: {
+                                fill: 'white',
+                                stroke: '#A0A0A0',
+                                d: 'M 120 -16 L 135 0 L 120 16 L 105 0 Z'  // Relleno vacío para agregación (rombo)
+                            }
+                        }
+                    ]
                 },
                 {
-                    type: 'LinkStencilComposicion',  // Dummy representation for links
-                    attrs: {
-                        body: { fill: 'none', stroke: '#000000', strokeWidth: 2 },
-                        label: { text: 'Composicion', fill: '#000000', fontSize: 10 }
-                    }
+                    type: 'LinkStencilComposicion',  // Representación para el link de composición
+                    markup: [
+                        {
+                            tagName: 'path',
+                            selector: 'line',
+                            attributes: {
+                                fill: 'none',
+                                stroke: '#A0A0A0',   // Color de la línea
+                                'stroke-width': 2,    // Grosor de la línea
+                                d: 'M 0 0 L 120 0'    // Dibuja la línea horizontalmente
+                            }
+                        },
+                        {
+                            tagName: 'path',
+                            selector: 'targetMarker',
+                            attributes: {
+                                fill: '#A0A0A0',  // Lleno para composición
+                                stroke: '#A0A0A0',
+                                d: 'M 120 -16 L 135 0 L 120 16 L 105 0 Z'  // Relleno lleno para composición (rombo)
+                            }
+                        }
+                    ]
                 },
                 {
-                    type: 'LinkStencilDependencia',  // Dummy representation for links
-                    attrs: {
-                        body: { fill: 'none', stroke: '#000000', strokeWidth: 2 },
-                        label: { text: 'Dependencia', fill: '#000000', fontSize: 10 }
-                    }
-                },
+                    type: 'LinkStencilDependencia',  // Representación para el link de dependencia
+                    markup: [
+                        {
+                            tagName: 'path',
+                            selector: 'line',
+                            attributes: {
+                                fill: 'none',
+                                stroke: '#A0A0A0',   // Color de la línea
+                                'stroke-width': 2,    // Grosor de la línea
+                                'stroke-dasharray': '5, 5',  // Línea discontinua para dependencia
+                                d: 'M 0 0 L 120 0'    // Dibuja la línea horizontalmente
+                            }
+                        },
+                        {
+                            tagName: 'path',
+                            selector: 'targetMarker',
+                            attributes: {
+                                fill: 'none',  // Flecha abierta
+                                stroke: '#A0A0A0',
+                                d: 'M 120 -16 L 150 0 L 120 16'  // Flecha abierta para dependencia
+                            }
+                        }
+                    ]
+                }
             ],
 
         };
